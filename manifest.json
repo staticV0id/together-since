@@ -1,7 +1,7 @@
 {
-  "name": "Today, With Love",
-  "short_name": "Today",
-  "description": "A little love letter that always tells you today's date.",
+  "name": "I ♥ mimi",
+  "short_name": "I ♥ U",
+  "description": "A little love letter to mimi, counting the days since we met.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

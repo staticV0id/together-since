@@ -145,10 +145,10 @@
     font-size:clamp(24px, 6vw, 32px);
     color:var(--gold-soft);
     letter-spacing:0.02em;
+    margin-bottom:2px;
   }
 
   .day-number{
-    margin-top:-30px;
     font-family:'Playfair Display', serif;
     font-weight:600;
     font-size:clamp(88px, 26vw, 148px);
@@ -216,6 +216,16 @@
     border-top:1px solid rgba(173,136,80,0.25);
     width:100%;
   }
+  .counter-time{
+    margin-top:12px;
+    padding-top:12px;
+    border-top:none;
+  }
+  .counter-time .counter-number{
+    font-size:clamp(17px, 4.4vw, 22px);
+    color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;
+  }
   .counter-item{
     flex:1;
     display:flex;
@@ -248,6 +258,10 @@
     letter-spacing:0.06em;
     margin-top:2px;
     text-transform:lowercase;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .pulse-ring, .ambient span{ animation:none !important; opacity:0 !important; }
   }
 
   /* install button */
@@ -387,6 +401,21 @@
       </div>
     </div>
 
+        <div class="counter counter-time">
+      <div class="counter-item">
+        <div class="counter-number" id="countHours">00</div>
+        <div class="counter-label">hours</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-number" id="countMinutes">00</div>
+        <div class="counter-label">minutes</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-number" id="countSeconds">00</div>
+        <div class="counter-label">seconds</div>
+      </div>
+    </div>
+
     <button class="install-btn" id="installBtn" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/>
@@ -439,29 +468,40 @@ const NOTES = [
   // "Together since" — anniversary counter
   const TOGETHER_SINCE = new Date(2025, 11, 12); // December 12, 2025
 
-  function updateCounter(now){
-    const msPerDay = 24 * 60 * 60 * 1000;
-    // normalize to midnight so partial-day drift doesn't creep in
-    const start = new Date(TOGETHER_SINCE.getFullYear(), TOGETHER_SINCE.getMonth(), TOGETHER_SINCE.getDate());
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+ function updateCounter(now){
+    const msPerSecond = 1000, msPerMinute = 60000, msPerHour = 3600000, msPerDay = 86400000;
+    const start = new Date(TOGETHER_SINCE.getFullYear(), TOGETHER_SINCE.getMonth(), TOGETHER_SINCE.getDate(), 0, 0, 0);
 
-    const totalDays = Math.max(0, Math.round((today - start) / msPerDay));
-    const totalWeeks = Math.floor(totalDays / 7);
-
-
-    // calendar-aware years/months
-    let years = today.getFullYear() - start.getFullYear();
-    let months = today.getMonth() - start.getMonth();
-    if (today.getDate() < start.getDate()) months -= 1;
+    // calendar-aware years/months (date-only comparison)
+    let years = now.getFullYear() - start.getFullYear();
+    let months = now.getMonth() - start.getMonth();
+    if (now.getDate() < start.getDate()) months -= 1;
     if (months < 0) { years -= 1; months += 12; }
     years = Math.max(0, years);
     months = Math.max(0, months);
-    const totalMonths = years * 12 + months;
+
+    // anchor = start date advanced by the full years + months already counted
+    const anchor = new Date(start.getFullYear() + years, start.getMonth() + months, start.getDate(), 0, 0, 0);
+
+    // whatever's left over, cascade into weeks, days, hours, minutes, seconds
+    let remainderMs = Math.max(0, now - anchor);
+    const weeks = Math.floor(remainderMs / (7 * msPerDay));
+    remainderMs -= weeks * 7 * msPerDay;
+    const days = Math.floor(remainderMs / msPerDay);
+    remainderMs -= days * msPerDay;
+    const hours = Math.floor(remainderMs / msPerHour);
+    remainderMs -= hours * msPerHour;
+    const minutes = Math.floor(remainderMs / msPerMinute);
+    remainderMs -= minutes * msPerMinute;
+    const seconds = Math.floor(remainderMs / msPerSecond);
 
     document.getElementById('countYears').textContent = years;
-    document.getElementById('countMonths').textContent = totalMonths;
-    document.getElementById('countWeeks').textContent = totalWeeks;
-    document.getElementById('countDays').textContent = totalDays;
+    document.getElementById('countMonths').textContent = months;
+    document.getElementById('countWeeks').textContent = weeks;
+    document.getElementById('countDays').textContent = days;
+    document.getElementById('countHours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('countMinutes').textContent = String(minutes).padStart(2,'0');
+    document.getElementById('countSeconds').textContent = String(seconds).padStart(2,'0');
   }
 
   function render(){
