@@ -261,6 +261,12 @@ html {
     font-size:clamp(14px, 3.6vw, 16px);
     color:var(--stage-fg-faint);
     letter-spacing:0.03em;
+    user-select: none; 
+    cursor: pointer; 
+    touch-action: manipulation; 
+    display: block; 
+    background: transparent; 
+    border: 0; 
   }
 
   .together{
@@ -799,7 +805,7 @@ html {
       <span class="line right"></span>
     </div>
 
-    <div class="footnote" id="footnote">every day is worth marking</div>
+    <button class="footnote" id="footnote">every day is worth marking</button>
 
     <div class="counter">
       <div class="counter-item">
@@ -993,15 +999,111 @@ const NOTES = [
   "small and worth keeping",
   "today, plainly enough",
   "another quiet one to keep",
-  "When you know, you know"
+  "when you know, you know",
+  "since then, still us",
+  "another day on our side",
+  "kept in the count",
+  "a little more forever",
+  "one more shared sunrise",
+  "still choosing this",
+  "the count keeps smiling",
+  "another mark for us",
+  "softly, time agrees",
+  "a day made ours",
+  "still here, still sweet",
+  "another reason to remember",
+  "held gently in time",
+  "one more day of us",
+  "ordinary, but ours",
+  "the quiet kind of magic",
+  "still worth the wait",
+  "today joins the story",
+  "a small proof of love",
+  "counted, and cherished",
+  "another day we get",
+  "time looks good on us",
+  "still becoming a memory",
+  "a date worth saving",
+  "one more golden little day",
+  "love, in calendar form",
+  "another soft milestone",
+  "the story keeps going",
+  "here's to this day too",
+  "a day with your name on it",
+  "still glad it began",
+  "another line in our story",
+  "the count feels lucky",
+  "one more day since magic",
+  "today belongs with us",
+  "quietly added to forever",
+  "another day worth naming",
+  "still the best beginning",
+  "kept because it matters",
+  "a little date, a big thing",
+  "one more reason to smile",
+  "time, gently collected",
+  "another day held close",
+  "this one counts too",
+  "still grateful for then",
+  "a small anniversary of us",
+  "another day, still bright",
+  "the kind of day we keep",
+  "one more piece of always",
+  "since that day, everything",
+  "today gets a little heart",
+  "another quiet celebration",
+  "counting because it matters",
+  "a day softly remembered",
+  "still us, still lovely",
+  "the calendar knows",
+  "one more day to treasure",
+  "a little more of our story",
+  "another mark of us",
+  "simple, sweet, ours",
+  "time has been kind",
+  "a day that stayed",
+  "still glad we met",
+  "another tiny forever",
+  "counted with a smile",
+  "today keeps the promise",
+  "a quiet note in time",
+  "another day of being us",
+  "the beginning still echoes",
+  "one more day, gladly",
+  "a small day with meaning",
+  "still holding the first hello",
+  "another page of us",
+  "the count keeps growing",
+  "today matters here",
+  "a memory in progress",
+  "still close to that first day",
+  "one more day since hello",
+  "a gentle mark in time",
+  "another day made meaningful",
+  "the date still feels warm",
+  "us, counted softly",
+  "shnorkling",
+  "Do you have Tickets?!",
+  "I have diareha",
+  "The boat ride is one hour",
 ];
+
+  
+const footNote = document.getElementById('footnote');
+
+
+    footNote.addEventListener('click', async () => {
+      const randomNote = NOTES[Math.floor(Math.random() * NOTES.length)];
+      footNote.textContent = randomNote;
+    });
+
 
   // "Together since" — anniversary counter
   const TOGETHER_SINCE = new Date(2025, 11, 12); // December 12, 2025
       const now = new Date();
 
 
-      document.getElementById('weekday').textContent = WEEKDAYS[TOGETHER_SINCE.getDay()];
+    document.getElementById('weekday').textContent = WEEKDAYS[TOGETHER_SINCE.getDay()];
     document.getElementById('dayNumber').textContent = String(TOGETHER_SINCE.getDate()).padStart(2,'0');
     document.getElementById('monthYear').textContent = `${MONTHS[TOGETHER_SINCE.getMonth()]} ${TOGETHER_SINCE.getFullYear()}`;
 
