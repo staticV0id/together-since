@@ -131,6 +131,7 @@
   }
 
   .content{
+    margin-top: -20px;
     position:relative;
     display:flex;
     flex-direction:column;
@@ -145,10 +146,11 @@
     font-size:clamp(24px, 6vw, 32px);
     color:var(--gold-soft);
     letter-spacing:0.02em;
-    margin-bottom:2px;
+    margin-top:-0px;
   }
 
   .day-number{
+    margin-top:-30px;
     font-family:'Playfair Display', serif;
     font-weight:600;
     font-size:clamp(88px, 26vw, 148px);
@@ -164,7 +166,6 @@
     font-size:clamp(20px, 5vw, 26px);
     letter-spacing:0.04em;
     color:var(--ink-soft);
-    margin-top:6px;
   }
 
   .divider{
@@ -369,8 +370,8 @@
       <div class="ring-static"></div>
       <div class="content">
         <div class="weekday" id="weekday">Friday</div>
-        <div class="day-number" id="dayNumber">03</div>
-        <div class="month-year" id="monthYear">July 2026</div>
+        <div class="day-number" id="dayNumber">12</div>
+        <div class="month-year" id="monthYear">December 2025</div>
       </div>
     </div>
 
@@ -468,7 +469,14 @@ const NOTES = [
   // "Together since" — anniversary counter
   const TOGETHER_SINCE = new Date(2025, 11, 12); // December 12, 2025
 
- function updateCounter(now){
+      document.getElementById('weekday').textContent = WEEKDAYS[TOGETHER_SINCE.getDay()];
+    document.getElementById('dayNumber').textContent = String(TOGETHER_SINCE.getDate()).padStart(2,'0');
+    document.getElementById('monthYear').textContent = `${MONTHS[TOGETHER_SINCE.getMonth()]} ${TOGETHER_SINCE.getFullYear()}`;
+    document.getElementById('footnote').textContent = NOTES[TOGETHER_SINCE.getDate() % NOTES.length];
+
+
+
+  function updateCounter(now){
     const msPerSecond = 1000, msPerMinute = 60000, msPerHour = 3600000, msPerDay = 86400000;
     const start = new Date(TOGETHER_SINCE.getFullYear(), TOGETHER_SINCE.getMonth(), TOGETHER_SINCE.getDate(), 0, 0, 0);
 
@@ -504,18 +512,20 @@ const NOTES = [
     document.getElementById('countSeconds').textContent = String(seconds).padStart(2,'0');
   }
 
+
+
   function render(){
     const now = new Date();
-    
-    document.getElementById('weekday').textContent = WEEKDAYS[TOGETHER_SINCE.getDay()];
-    document.getElementById('dayNumber').textContent = String(TOGETHER_SINCE.getDate()).padStart(2,'0');
-    document.getElementById('monthYear').textContent = `${MONTHS[TOGETHER_SINCE.getMonth()]} ${TOGETHER_SINCE.getFullYear()}`;
-    document.getElementById('footnote').textContent = NOTES[TOGETHER_SINCE.getDate() % NOTES.length];
+
+
     updateCounter(now);
   }
+
+  
   render();
-  // keep it correct across midnight without needing a reload
-  setInterval(render, 60 * 1000);
+  // tick every second so the seconds counter stays live
+  setInterval(render, 1000);
+
 
   // gentle ambient hearts
   (function ambient(){
